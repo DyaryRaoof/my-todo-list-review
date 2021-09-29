@@ -87,25 +87,19 @@ function createTodoElement(todo) {
 }
 
 function createReplaceTodoElement(todo) {
-  // const html = `
-  //   <input type="checkbox" class="checkbox"
-  //   ${todo.completed ? 'checked' : ''}>
-  //   <span>${todo.description}</span>
-  // <span class="material-icons edit-icon" style=" cursor: pointer">
-  //     more_vert
-  // </span>
-  //   `;
-
   const checkbox = createCheckBox(todos.indexOf(todo));
   const span = document.createElement('span');
   span.innerText = todo.description;
   const threeDots = createMaterialIconelement('more_vert');
+  const innerDiv = document.createElement('div');
+  innerDiv.appendChild(checkbox);
+  innerDiv.appendChild(span);
   const div = createTodoDivElement('white');
-  div.appendChild(checkbox);
-  div.appendChild(span);
+
+  div.appendChild(innerDiv);
   div.appendChild(threeDots);
 
-  return div;
+  return [div, checkbox];
 }
 
 function addTodoElement(todo) {
@@ -124,6 +118,9 @@ function changeElementToCompleted(checkbox) {
     checkbox.parentElement.parentElement.parentElement,
   ) - 4;
 
+  console.log(checkbox.parentElement.parentElement.parentElement);
+
+  console.log(index);
   update(todos[index - 1]);
   saveTodosLocally();
 
@@ -159,18 +156,16 @@ function addEventToSingleCheckBox(checkbox, todo) {
   });
 }
 
-function addEventsToCheckboxes(recievedIndex) {
+function addEventsToCheckboxes(checkbox, todo) {
   const checkboxes = document.querySelectorAll('.checkbox');
 
-  checkboxes.forEach((checkbox, index) => {
-    if (recievedIndex) {
-      if (recievedIndex === index) {
-        addEventToSingleCheckBox(checkbox, todos[recievedIndex]);
-      }
-    } else {
+  if (checkbox) {
+    addEventToSingleCheckBox(checkbox, todo);
+  } else {
+    checkboxes.forEach((checkbox) => {
       addEventToSingleCheckBox(checkbox);
-    }
-  });
+    });
+  }
 }
 
 function addEventsToEditIconsContinued(editIcon) {
@@ -199,12 +194,13 @@ function addEventsToEditIconsContinued(editIcon) {
         const todo = todos[index];
         todo.description = input.value;
         updateTodo(todo, todos[index]);
-        const newDiv = createReplaceTodoElement(todo);
+        const [newDiv, newCheckbox] = createReplaceTodoElement(todo);
         addEventsToEditIconsContinued(newDiv.lastChild);
         div.replaceWith(newDiv);
         saveTodosLocally();
         div.style.backgroundColor = 'white';
-        addEventsToCheckboxes(index);
+        console.log(index, 'from keyup');
+        addEventsToCheckboxes(newCheckbox, todo);
       }
     });
 
@@ -222,7 +218,7 @@ function addEventsToEditIcons(recievedIndex) {
 
   editIcons.forEach((editIcon, foreachIndex) => {
     if (recievedIndex) {
-      if (recievedIndex === foreachIndex) {
+      if (editIcons.length - 1 === foreachIndex) {
         addEventsToEditIconsContinued(editIcon);
       }
     } else {
@@ -243,6 +239,7 @@ window.addEventListener('load', () => {
 
 function addEventListenerToInput() {
   const input = document.querySelector('#input');
+  console.log(input.nextElementSibling);
   input.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
       const todo = new Todo(input.value, false, todos.length + 1);
@@ -251,7 +248,8 @@ function addEventListenerToInput() {
       saveTodosLocally();
       input.value = '';
       addEventsToEditIcons(todos.length - 1);
-      addEventsToCheckboxes(todos.length - 1);
+      const checkboxes = document.querySelectorAll('.checkbox');
+      addEventsToCheckboxes(checkboxes.lastChild, todo);
     }
   });
 }
