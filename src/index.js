@@ -118,9 +118,6 @@ function changeElementToCompleted(checkbox) {
     checkbox.parentElement.parentElement.parentElement,
   ) - 4;
 
-  console.log(checkbox.parentElement.parentElement.parentElement);
-
-  console.log(index);
   update(todos[index - 1]);
   saveTodosLocally();
 
@@ -199,7 +196,6 @@ function addEventsToEditIconsContinued(editIcon) {
         div.replaceWith(newDiv);
         saveTodosLocally();
         div.style.backgroundColor = 'white';
-        console.log(index, 'from keyup');
         addEventsToCheckboxes(newCheckbox, todo);
       }
     });
@@ -239,7 +235,6 @@ window.addEventListener('load', () => {
 
 function addEventListenerToInput() {
   const input = document.querySelector('#input');
-  console.log(input.nextElementSibling);
   input.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
       const todo = new Todo(input.value, false, todos.length + 1);
