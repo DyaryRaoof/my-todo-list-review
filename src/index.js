@@ -1,5 +1,5 @@
 import './style.css';
-import update from './update.js';
+import { clearAllCompleted, setAsCompleted } from './update.js';
 import { addTodo, deleteTodo, updateTodo } from './crud.js';
 
 const button = document.querySelector('button');
@@ -118,7 +118,7 @@ function changeElementToCompleted(checkbox) {
     checkbox.parentElement.parentElement.parentElement,
   ) - 4;
 
-  update(todos[index - 1]);
+  setAsCompleted(todos[index - 1]);
   saveTodosLocally();
 
   const [completedElement, tickSpan] = createReplaceTodoElementForCompletedTask(
@@ -134,7 +134,7 @@ function changeElementToCompleted(checkbox) {
       div.replaceWith(prevChild);
       const checkbox = prevChild.firstElementChild.firstElementChild;
       checkbox.checked = false;
-      update(todos[index - 1]);
+      setAsCompleted(todos[index - 1]);
       saveTodosLocally();
     }
   });
@@ -252,18 +252,7 @@ function addEventListenerToInput() {
 addEventListenerToInput();
 
 button.addEventListener('click', () => {
-  const todoElements = document.querySelectorAll('.todo-element');
-  const removedTodos = [];
-  todos.forEach((todo, index) => {
-    if (todo.completed) {
-      removedTodos.push(todo);
-      todoElements[index].parentNode.remove();
-    }
-  });
-
-  removedTodos.forEach((todo) => {
-    deleteTodo(todo, todos);
-  });
-
+  const newTodos = clearAllCompleted(todos);
+  todos = newTodos;
   saveTodosLocally();
 });
