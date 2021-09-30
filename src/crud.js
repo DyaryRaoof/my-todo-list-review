@@ -11,6 +11,7 @@ function deleteTodo(todo, todoList) {
       todo.index -= 1;
     }
   });
+  return todoList;
 }
 
 function updateTodo(newTodo, oldTodo) {
