@@ -1,5 +1,6 @@
 function addTodo(todoItem, todoList) {
   todoList.push(todoItem);
+  return todoList;
 }
 
 function deleteTodo(todo, todoList) {
