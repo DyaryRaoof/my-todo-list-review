@@ -1,4 +1,4 @@
-import { addTodo, deleteTodo } from '../src/crud.js';
+import { addTodo, deleteTodo, updateTodo } from '../src/crud.js';
 
 describe('add', () => {
   const todos = [];
@@ -15,7 +15,10 @@ describe('add', () => {
 });
 
 describe('delete', () => {
-  const todos = [{ description: 'create a watch', completed: false, index: 0 }, { description: 'see a movie', completed: false, index: 1 }];
+  const todos = [
+    { description: 'create a watch', completed: false, index: 0 },
+    { description: 'see a movie', completed: false, index: 1 },
+  ];
   test('todos length should be 1', () => {
     expect(deleteTodo(todos[1], todos)).toHaveLength(1);
   });
@@ -23,6 +26,17 @@ describe('delete', () => {
   test('index should not be 1', () => {
     expect(deleteTodo(todos[1], todos)).not.toEqual(
       expect.arrayContaining([expect.objectContaining({ index: 1 })]),
+    );
+  });
+});
+
+describe('update', () => {
+  const todo1 = { description: 'create a watch', completed: false, index: 0 };
+  const todo2 = { description: 'create a watch 2', completed: false, index: 0 };
+
+  test('should contain an object with description of create a watch 2', () => {
+    expect(updateTodo(todo2, todo1)).toEqual(
+      expect.objectContaining({ description: 'create a watch 2' }),
     );
   });
 });
