@@ -50,7 +50,7 @@ run npm start.
 
 Contributions, issues, and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/DyaryRaoof/my-todo-list/issues).
+Feel free to check the [issues page](https://github.com/DyaryRaoof/my-todo-list-review/issues).
 
 ## Show your support
 
